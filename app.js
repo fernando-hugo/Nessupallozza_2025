@@ -2,7 +2,8 @@
 let pixInterval; 
 let ingressoSelecionado = "";
 
-const btnIngressos = document.getElementById("btnIngressos");
+const btnVerLineupInicial = document.getElementById("btnVerLineupInicial"); 
+const btnAdquirirIngressoLineup = document.getElementById("btnAdquirirIngressoLineup"); 
 const modalEscolha = document.getElementById("modalEscolha");
 const modalDados = document.getElementById("modalDados");
 const modalPagamento = document.getElementById("modalPagamento");
@@ -17,7 +18,7 @@ const lineupSection = document.getElementById("lineup-section");
 const linkRelatorio = document.getElementById("linkRelatorio");
 
 
-// NOVIDADE: Função que gera o HTML da página do ingresso com animação
+// FUNÇÃO PRINCIPAL: Gera o HTML da página do ingresso com animação (em uma nova aba)
 function gerarHtmlIngresso(imagemPath) {
     const dadosCompra = JSON.parse(localStorage.getItem('ultimaCompra'));
     if (!dadosCompra) return "";
@@ -42,7 +43,7 @@ function gerarHtmlIngresso(imagemPath) {
                     min-height: 100vh;
                     background-color: #000;
                     font-family: Arial, sans-serif;
-                    overflow: auto; /* Garante que o scroll funcione se a tela for pequena */
+                    overflow: auto;
                 }
                 .ticket-container {
                     padding: 20px;
@@ -58,7 +59,7 @@ function gerarHtmlIngresso(imagemPath) {
                 }
                 .success-banner {
                     color: #000;
-                    background: #ffea00; /* Amarelo Neon */
+                    background: #ffea00; 
                     padding: 15px 30px;
                     border-radius: 50px;
                     font-size: 1.5em;
@@ -86,7 +87,6 @@ function gerarHtmlIngresso(imagemPath) {
                     50% { transform: scale(1.05); }
                     100% { transform: scale(1); }
                 }
-                /* Rodapé simples para instrução de download */
                 footer {
                     color: #999;
                     font-size: 0.9em;
@@ -113,18 +113,15 @@ function gerarHtmlIngresso(imagemPath) {
 }
 
 
-// NOVIDADE: Função que fecha o modal e exibe o Line-up
+// NOVIDADE: Rola a página para o Line-up
 function verLineupCompleto() {
     modalIngressoPronto.style.display = "none";
-    
-    // EXIBIR O LINE-UP NA PÁGINA PRINCIPAL
-    lineupSection.style.display = "block"; 
-    // Rola para a seção do line-up
+    // Rola de volta para o início do Line-up
     lineupSection.scrollIntoView({ behavior: 'smooth' }); 
 }
 
 
-// FUNÇÃO PARA EXPORTAR RELATÓRIO JSON (Apenas para a anfitriã)
+// FUNÇÃO PARA EXPORTAR RELATÓRIO JSON
 function exportarRelatorio() {
     const compradoresString = localStorage.getItem('listaCompradores');
     let listaCompradores = [];
@@ -168,8 +165,16 @@ const fecharModais = () => {
     }
 };
 
-// Abrir modal escolha
-btnIngressos.onclick = () => {
+
+// EVENTOS DE ABERTURA E FECHAMENTO
+
+// 1. Botão do Banner: Rola a página até o Line-up
+btnVerLineupInicial.onclick = () => {
+    lineupSection.scrollIntoView({ behavior: 'smooth' });
+};
+
+// 2. Botão de Compra no Line-up: Abre o modal de escolha
+btnAdquirirIngressoLineup.onclick = () => {
     modalEscolha.style.display = "flex";
     
     // Pré-selecionar a opção de 1 Dia
@@ -229,7 +234,7 @@ formDados.addEventListener('submit', (event) => {
     else valorIngresso = "Valor não definido";
     
     
-    // 1. Armazenar os dados da compra no armazenamento local (Para o Relatório da Anfitriã)
+    // 1. Armazenar os dados da compra no armazenamento local
     const dadosCompra = { 
         nome, 
         telefone, 
@@ -257,7 +262,7 @@ formDados.addEventListener('submit', (event) => {
 🎟 Ingresso: ${ingressoSelecionado}
 💰 Valor: ${valorIngresso}
 
-*Aguardando Anciosamente para fazer meu pagamento!!!.*`;
+*Aguardando Anciosamente para Fazer meu Pagamento!!!.*`;
 
     let telefoneHost = "5511947310530"; 
     let url = `https://wa.me/${telefoneHost}?text=${encodeURIComponent(msg)}`;
